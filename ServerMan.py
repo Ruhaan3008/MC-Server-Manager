@@ -7,6 +7,11 @@ import select
 
 HOST = "127.0.0.1"
 PORT = 25545
+SERVER_PORT = 25565
+
+SERVER_STOP_TIMEOUT = 300
+
+SERVER_MEM_ALLOCATION = "4G"
 
 with open("pwd.txt","r") as f:
     RCON_PWD = f.read()
@@ -15,10 +20,11 @@ Server_Status = False
 
 SERVER_PATH = "D:/server/server.jar"
 SERVER_DIRECTORY = "D:/server"
-serverStatusSocket = JavaServer("127.0.0.1", 25565)
+serverStatusSocket = JavaServer(HOST, SERVER_PORT)
 
 def checkServerStatus():
     global Server_Status
+    # if the server is online this code does not throw an exception
     try:
         status = serverStatusSocket.status()
         Server_Status = True
@@ -34,7 +40,7 @@ def startServer(conn):
 
     print("Starting server")
     subprocess.Popen(
-        f"java -jar -Xmx4G -Xms4G {SERVER_PATH}",
+        f"java -jar -Xmx{SERVER_MEM_ALLOCATION} -Xms{SERVER_MEM_ALLOCATION} {SERVER_PATH}",
         cwd = SERVER_DIRECTORY,
         stdout= subprocess.DEVNULL,
         stderr= subprocess.DEVNULL
@@ -55,7 +61,7 @@ def stopServer():
         print("Server in use. Not stopping Server")
         return
     
-    server = mcrcon.MCRcon("127.0.0.1", RCON_PWD)
+    server = mcrcon.MCRcon(HOST, RCON_PWD)
     try:
         server.connect()
         
@@ -72,7 +78,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as qSock:
     qSock.listen()
 
     while True:
-        readable, _, _ = select.select([qSock], [], [], 300)
+        readable, _, _ = select.select([qSock], [], [], SERVER_STOP_TIMEOUT)
 
         if not readable:
             stopServer()
