@@ -1,2 +1,2 @@
-# MC-Server-Manager
+# Minecraft Server Manager
 Automatically start, stop and remotely manage your Minecraft Server.
