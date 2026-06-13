@@ -74,7 +74,7 @@ def stopServer():
         pass
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as qSock:
-    qSock.bind((HOST,PORT))
+    qSock.bind(("0.0.0.0",PORT))
     qSock.listen()
 
     while True:
