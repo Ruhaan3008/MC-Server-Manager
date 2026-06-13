@@ -16,12 +16,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as serverSock:
         if not data:
             break
         
-        print(data)
+        print(data.decode())
 
-        if data == codes.SERVER_RUNNING:
-            serverSock.sendall(b'')
+        if (data == codes.SERVER_STARTING) or (data == codes.SERVER_RUNNING):
             break
-        if data == codes.SERVER_ERROR:
+
+        elif data == codes.SERVER_ERROR:
             print("Server Error! Server not running")
             break
         else:
