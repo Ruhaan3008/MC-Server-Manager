@@ -1,0 +1,28 @@
+import socket
+import codes
+
+HOST = "127.0.0.1"
+PORT = 25545
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as serverSock:
+    serverSock.connect((HOST, PORT))
+    print("Connection established")
+
+    serverSock.sendall(codes.SERVER_START_REQUEST)
+    data = serverSock.recv(1024)
+    while True:
+        data = serverSock.recv(1024)
+
+        if not data:
+            break
+        
+        print(data)
+
+        if data == codes.SERVER_RUNNING:
+            serverSock.sendall(b'')
+            break
+        if data == codes.SERVER_ERROR:
+            print("Server Error! Server not running")
+            break
+        else:
+            serverSock.send(codes.IDLE)

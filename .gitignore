@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Password File
+pwd.txt
+
+# Distibution Files
+distribution/
+distribution.zip
