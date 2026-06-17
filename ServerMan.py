@@ -56,7 +56,7 @@ def getPlayerCount():
     checkServerStatus()
 
     if not Server_Status:
-        return
+        return 0
     
     status = serverStatusSocket.status()
     return status.players.online
@@ -93,7 +93,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as qSock:
         if not readable:
             stopServer()
             continue
-
+            
+        
         conn, addr = qSock.accept()
 
         with conn:
