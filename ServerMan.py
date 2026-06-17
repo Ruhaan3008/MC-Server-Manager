@@ -25,11 +25,16 @@ serverStatusSocket = JavaServer(HOST, SERVER_PORT)
 def checkServerStatus():
     global Server_Status
     # if the server is online this code does not throw an exception
+    prevState = Server_Status
     try:
         status = serverStatusSocket.status()
         Server_Status = True
     except:
         Server_Status = False
+    
+    if prevState and not Server_Status:
+        print("Server shutdown detected.")
+        pass
 
 def startServer(conn):
     checkServerStatus()
@@ -51,14 +56,14 @@ def getPlayerCount():
     checkServerStatus()
 
     if not Server_Status:
-        return 0
+        return
     
     status = serverStatusSocket.status()
     return status.players.online
 
 def stopServer():
     if getPlayerCount() != 0:
-        print("Server in use. Not stopping Server")
+        #print("Server in use. Not stopping Server")
         return
     
     server = mcrcon.MCRcon(HOST, RCON_PWD)
@@ -71,7 +76,10 @@ def stopServer():
         server.disconnect()
     
     except:
+        print("Server Shutdown unsuccesful")
         pass
+
+    checkServerStatus()
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as qSock:
     qSock.bind(("0.0.0.0",PORT))
