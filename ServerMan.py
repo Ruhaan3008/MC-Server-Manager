@@ -81,6 +81,8 @@ def stopServer():
 
     checkServerStatus()
 
+print("Server Manager Started")
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as qSock:
     qSock.bind(("0.0.0.0",PORT))
     qSock.listen()
@@ -90,24 +92,24 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as qSock:
 
         if not readable:
             stopServer()
+            continue
 
-        else:
-            conn, addr = qSock.accept()
+        conn, addr = qSock.accept()
 
-            with conn:
-                print(f"Connected to {addr}")
-                while True:
-                    data = conn.recv(1024)
+        with conn:
+            print(f"Connected to {addr}")
+            while True:
+                data = conn.recv(1024)
 
-                    if not data:
-                        break 
+                if not data:
+                    break 
 
-                    if (data == codes.SERVER_START_REQUEST):
-                        print(data.decode())
-                        conn.sendall(codes.INITIATING_SERVER)
-                        startServer(conn)
-                        break
+                if (data == codes.SERVER_START_REQUEST):
+                    print(data.decode())
+                    conn.sendall(codes.INITIATING_SERVER)
+                    startServer(conn)
+                    break
 
-                    elif (data == codes.IDLE):
-                        pass
+                elif (data == codes.IDLE):
+                    pass
 
