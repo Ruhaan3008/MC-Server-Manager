@@ -223,3 +223,4 @@ pwd.txt
 # Distibution Files
 distribution/
 distribution.zip
+*.zip
