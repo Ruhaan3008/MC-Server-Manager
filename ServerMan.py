@@ -62,22 +62,34 @@ def getPlayerCount():
     return status.players.online
 
 def stopServer():
+    #this function calls checkServerStatus
+    #So no need to call it here
     if getPlayerCount() != 0:
         #print("Server in use. Not stopping Server")
         return
     
+    #server not on, so exit
+    if not Server_Status:
+        return
+    
     server = mcrcon.MCRcon(HOST, RCON_PWD)
+
     try:
         server.connect()
+    
+    except:
+        print("Could not connect to the server")
+        return
         
+    try:
         server.command("stop")
         print("Server Stoped")
 
-        server.disconnect()
-    
     except:
         print("Server Shutdown unsuccesful")
         pass
+
+    server.disconnect()
 
     checkServerStatus()
 
