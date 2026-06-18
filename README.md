@@ -1,4 +1,5 @@
 # Minecraft Server Manager
+I made this program so when I host a minecraft server on my laptop the server does not take up too may resources when no one it playing.
 Automatically start, stop and remotely manage your Minecraft Server. This program consists of a Server Manager script (ServerMan.py) and a client (client.py) which you can make a wrapper around. The server manager will turn off the server if no one is there for a certain amount of time. The client will get the status of the server or request to turn on the server.
 
 # How to Use
