@@ -28,7 +28,7 @@ def client_request():
                     break
 
                 elif data == codes.SERVER_ERROR:
-                    print("Server Error! Server not running")
+                    print("Server not running")
                     break
                 else:
                     serverSock.send(codes.IDLE)

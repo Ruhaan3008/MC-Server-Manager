@@ -4,6 +4,8 @@ from mcstatus import JavaServer
 import mcrcon
 import subprocess
 import select
+import os
+import time
 
 HOST = "127.0.0.1"
 PORT = 25545
@@ -21,6 +23,8 @@ Server_Status = False
 SERVER_PATH = "D:/server/server.jar"
 SERVER_DIRECTORY = "D:/server"
 serverStatusSocket = JavaServer(HOST, SERVER_PORT)
+
+errorLogFile = "error.log"
 
 def checkServerStatus():
     global Server_Status
@@ -44,12 +48,25 @@ def startServer(conn):
         return
 
     print("Starting server")
-    subprocess.Popen(
-        f"java -jar -Xmx{SERVER_MEM_ALLOCATION} -Xms{SERVER_MEM_ALLOCATION} {SERVER_PATH}",
-        cwd = SERVER_DIRECTORY,
-        stdout= subprocess.DEVNULL,
-        stderr= subprocess.DEVNULL
-    )
+    with open(errorLogFile, "w") as errorLog:
+        subprocess.Popen(
+            f"java -jar -Xmx{SERVER_MEM_ALLOCATION} -Xms{SERVER_MEM_ALLOCATION} {SERVER_PATH}",
+            cwd = SERVER_DIRECTORY,
+            stdout= subprocess.DEVNULL,
+            stderr= errorLog
+        )
+    
+    #wait some time to see if the server actually launched
+    time.sleep(3)
+    
+    serverLaunchUnsucessful = os.path.getsize(errorLogFile) > 0
+
+    if serverLaunchUnsucessful:
+        conn.sendall(codes.SERVER_ERROR)
+        print("Server Start Unsuccessful")
+        return
+    
+    
     conn.sendall(codes.SERVER_STARTING)
 
 def getPlayerCount():
